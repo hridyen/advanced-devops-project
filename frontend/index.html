@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Advanced DevOps Project V2</title>
+</head>
+<body>
+    <h1>Advanced DevOps Project V2</h1>
+    <p>Nginx Reverse Proxy + Backend + MySQL</p>
+
+    <button onclick="callAPI()">Call Backend API</button>
+
+    <pre id="output"></pre>
+
+    <script>
+        function callAPI() {
+            fetch("/api")
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById("output").innerText =
+                        JSON.stringify(data, null, 2);
+                });
+        }
+    </script>
+</body>
+</html>
