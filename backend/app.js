@@ -19,7 +19,7 @@ client.connect()
   .catch((err) => console.error("DB connection error:", err));
 
 app.get("/health", (req, res) => {
-  res.json({ status: "OK" });
+  res.status(200).json({ status: "ok", service: "backend", version: "v1" });
 });
 
 app.listen(port, "0.0.0.0", () => {
