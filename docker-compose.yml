@@ -1,12 +1,33 @@
+
 services:
   frontend:
     build: ./frontend
     restart: unless-stopped
+
+
+
+services:
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./frontend/index.html:/usr/share/nginx/html/index.html
+    depends_on:
+      - backend
+
     networks:
       - app_network
 
   backend:
     build: ./backend
+
+    container_name: backend
+
     restart: unless-stopped
     env_file:
       - .env
@@ -21,11 +42,17 @@ services:
       retries: 3
 
   db:
+
     image: postgres:15-alpine
+
+    image: mysql:8.0
+    container_name: db
+
     restart: unless-stopped
     env_file:
       - .env
     volumes:
+
       - db_data:/var/lib/postgresql/data
     networks:
       - app_network
@@ -47,10 +74,21 @@ services:
       - backend
     networks:
       - app_network
+      - db_data:/var/lib/mysql
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      retries: 5
 
 volumes:
   db_data:
 
 networks:
   app_network:
+
     driver: bridge
+
+    driver: bridge
+
